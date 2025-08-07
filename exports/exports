@@ -1,0 +1,22 @@
+// Export AI response as PDF
+app.post('/export', (req, res) => {
+  const { content } = req.body;
+
+  if (!content) {
+    return res.status(400).send('⚠️ No content to export.');
+  }
+
+  // Set response headers
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=AI_Response.pdf');
+
+  // Create and send PDF
+  const doc = new PDFDocument();
+  doc.pipe(res);
+
+  doc.fontSize(16).text('AI-Generated Response', { underline: true });
+  doc.moveDown();
+  doc.fontSize(12).text(content, { lineGap: 6 });
+
+  doc.end();
+});
