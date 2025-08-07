@@ -2,58 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Township AI Business Assistant</title>
+  <title>Township AI Business Companion</title>
   <link rel="stylesheet" href="/style.css" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      background: #f4f4f4;
-    }
-    h1, h2 {
-      color: #333;
-    }
-    section {
-      background: #fff;
-      padding: 1rem 1.5rem;
-      margin-bottom: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    input {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.4rem;
-      margin-bottom: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    pre {
-      background-color: #eaeaea;
-      padding: 1rem;
-      border-radius: 6px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-  </style>
 </head>
 <body>
-  <h1>🚀 Township AI - Business Assistant</h1>
+  <h1>Township AI - Business Companion</h1>
 
-  <!-- Business Plan Form -->
   <section>
     <h2>📄 Generate Business Plan</h2>
     <form action="/generate" method="POST">
@@ -63,14 +17,14 @@
     </form>
   </section>
 
-  <!-- Marketing Content Form -->
-<form action="/register-help" method="POST">
-  <input type="text" name="country" placeholder="Country" required />
-  <button type="submit">Get Guidance</button>
-</form>
+  <section>
+    <h2>Marketing Content</h2>
+    <form action="/marketing" method="POST">
+      <input type="text" name="product" placeholder="Product or Service" required />
+      <button type="submit">Generate Marketing Message</button>
+    </form>
+  </section>
 
-
-  <!-- Customer Communication Form -->
   <section>
     <h2>💬 Customer Message</h2>
     <form action="/message" method="POST">
@@ -79,7 +33,6 @@
     </form>
   </section>
 
-  <!-- Invoice Creation Form -->
   <section>
     <h2>🧾 Create Invoice</h2>
     <form action="/invoice" method="POST">
@@ -88,7 +41,6 @@
     </form>
   </section>
 
-  <!-- Business Registration Guidance Form -->
   <section>
     <h2>📋 Business Registration Help</h2>
     <form action="/register-help" method="POST">
@@ -97,16 +49,20 @@
     </form>
   </section>
 
-  <!-- Display AI Response -->
-  <% if (typeof response !== 'undefined' && response) { %>
-    <section>
-      <h2>🧠 AI Response:</h2>
+  <% if (response) { %>
+    <section class="output-box">
+      <h2>AI Response:</h2>
       <pre><%= response %></pre>
+
+      <form action="/export" method="POST">
+        <input type="hidden" name="content" value="<%= response.replace(/"/g, '&quot;') %>">
+        <button type="submit">📥 Export as PDF</button>
+      </form>
     </section>
   <% } %>
+
 </body>
 </html>
-
 
 
 
