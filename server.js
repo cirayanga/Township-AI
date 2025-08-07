@@ -1,93 +1,132 @@
-console.log('Cohere API key:', process.env.COHERE_API_KEY ? 'Loaded' : 'Missing');
+const express = require('express');
+const path = require('path');
+require('dotenv').config();
+const { CohereClient } = require('cohere-ai');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
+const app = express();
+const PORT = process.env.PORT || 4000;
 
-// Business plan generation
+// Initialize Cohere client
+const cohere = new CohereClient({
+  token: process.env.COHERE_API_KEY,
+});
+
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
+
+// Homepage
+app.get('/', (req, res) => {
+  res.render('index', { response: null });
+});
+
+// Generate Business Plan
 app.post('/generate', async (req, res) => {
   const { idea, location } = req.body;
   try {
     const result = await cohere.generate({
-      prompt: `Create a detailed business plan for a township-based business idea: "${idea}" located in "${location}".`,
+      model: 'command',
+      prompt: `Generate a practical business plan for a "${idea}" based in ${location}. Include target market, pricing, startup steps.`,
       maxTokens: 300,
     });
     res.render('index', { response: result.generations[0].text.trim() });
-  } catch (error) {
-    console.error('AI generation error:', error);
-    res.render('index', { response: '⚠️ Error generating business plan. Please try again.' });
-  }
-});
-app.post('/register-help', async (req, res) => {
-  const { country } = req.body;
-  console.log('Received country:', country);
-
-  try {
-    const result = await cohere.generate({
-      prompt: `Provide step-by-step guidance on how to register a business in ${country}. Be clear and easy to understand.`,
-      maxTokens: 500,
-    });
-    console.log('AI response:', result.generations[0].text.trim());
-
-    res.render('index', { response: result.generations[0].text.trim() });
-  } catch (error) {
-    console.error('Registration help error:', error);
-    res.render('index', { response: '⚠️ Error fetching registration help. Please try again.' });
+  } catch (err) {
+    console.error('❌ Business Plan Error:', err);
+    res.render('index', { response: '⚠️ Error generating business plan.' });
   }
 });
 
+// Marketing Message
 app.post('/marketing', async (req, res) => {
   const { product } = req.body;
   try {
     const result = await cohere.generate({
-      prompt: `Write a catchy marketing message for this product or service: "${product}". Make it inspiring and locally relevant.`,
-      maxTokens: 100,
+      model: 'command',
+      prompt: `Write a creative and compelling marketing message for a product or service: "${product}".`,
+      maxTokens: 150,
     });
     res.render('index', { response: result.generations[0].text.trim() });
-  } catch (error) {
-    console.error('Marketing generation error:', error);
-    res.render('index', { response: '⚠️ Error generating marketing message. Please try again.' });
+  } catch (err) {
+    console.error('❌ Marketing Error:', err);
+    res.render('index', { response: '⚠️ Error generating marketing content.' });
   }
 });
 
+// Customer Message
 app.post('/message', async (req, res) => {
   const { context } = req.body;
   try {
     const result = await cohere.generate({
-      prompt: `Write a professional message for a customer. Context: "${context}".`,
-      maxTokens: 100,
+      model: 'command',
+      prompt: `Write a professional customer message based on this context: "R{context}".`,
+      maxTokens: 150,
     });
     res.render('index', { response: result.generations[0].text.trim() });
-  } catch (error) {
-    console.error('Message generation error:', error);
-    res.render('index', { response: '⚠️ Error generating customer message. Please try again.' });
+  } catch (err) {
+    console.error('❌ Customer Message Error:', err);
+    res.render('index', { response: '⚠️ Error generating customer message.' });
   }
 });
 
+// Invoice
 app.post('/invoice', async (req, res) => {
   const { details } = req.body;
   try {
     const result = await cohere.generate({
-      prompt: `Create a simple invoice from these details: "${details}". Include item name, quantity, unit price, total, and recipient name.`,
-      maxTokens: 150,
+      model: 'command',
+      prompt: `Generate a simple invoice based on the following details: R{details}. Format clearly.`,
+      maxTokens: 200,
     });
     res.render('index', { response: result.generations[0].text.trim() });
-  } catch (error) {
-    console.error('Invoice generation error:', error);
-    res.render('index', { response: '⚠️ Error generating invoice. Please try again.' });
+  } catch (err) {
+    console.error('❌ Invoice Error:', err);
+    res.render('index', { response:' Error generating invoice.' });
   }
 });
 
+// Business Registration Help
 app.post('/register-help', async (req, res) => {
   const { country } = req.body;
   try {
     const result = await cohere.generate({
-      prompt: `Provide step-by-step guidance on how to register a business in ${country}. Be clear and easy to understand.`,
+      model: 'command',
+      prompt: `Provide step-by-step guidance on how to register a small business in ${country}.`,
       maxTokens: 250,
     });
     res.render('index', { response: result.generations[0].text.trim() });
-  } catch (error) {
-    console.error('Registration help error:', error);
-    res.render('index', { response: '⚠️ Error fetching registration help. Please try again.' });
+  } catch (err) {
+    console.error('❌ Registration Help Error:', err);
+    res.render('index', { response: '⚠️ Error generating registration guidance.' });
   }
 });
+
+// Export as PDF
+app.post('/export', (req, res) => {
+  const { content } = req.body;
+
+  // Set headers for PDF file download
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=AI_Response.pdf');
+
+  const doc = new PDFDocument();
+  doc.pipe(res);
+
+  doc.fontSize(16).text('AI-Generated Response', { underline: true });
+  doc.moveDown();
+  doc.fontSize(12).text(content || 'No content provided.', { lineGap: 6 });
+
+  doc.end();
+});
+// Start server
+app.listen(PORT, () => {
+  console.log(` Server running at http://localhost:{PORT}`);
+});
+
 
 
 
