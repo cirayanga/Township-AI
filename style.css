@@ -1,0 +1,21 @@
+:root {
+  --primary: #e91e63;   /* bright pink */
+  --secondary: #ff77a9; /* lighter pink */
+  --accent: #ffb6c1;    /* soft pink accent */
+  --light: #f8f9fa;
+  --dark: #212529;
+  --success: #4cc9f0;
+  --warning: #f9c74f;
+  --gray: #6c757d;
+  --light-gray: #e9ecef;
+  --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  --transition: all 0.3s ease;
+}
+
+header {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+button {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+}

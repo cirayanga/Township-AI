@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Township AI Business Companion</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --primary: #e91e63;   /* bright pink */
+    --secondary: #ff77a9; /* lighter pink */
+    --accent: #ffb6c1;    /* soft pink accent */
+    --light: #f8f9fa;
+    --dark: #212529;
+    --success: #4cc9f0;
+    --warning: #f9c74f;
+    --gray: #6c757d;
+    --light-gray: #e9ecef;
+    --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    --transition: all 0.3s ease;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',sans-serif;line-height:1.6;color:var(--dark);background:#f5f7ff;}
+  .container{max-width:1200px;margin:0 auto;padding:20px;}
+  header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;text-align:center;padding:2rem 0;margin-bottom:2rem;border-radius:0 0 20px 20px;box-shadow:var(--card-shadow);}
+  h1{font-size:2.5rem;margin-bottom:.5rem;}
+  .tagline{font-size:1.2rem;opacity:.9;max-width:600px;margin:0 auto;}
+  .dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-bottom:40px;}
+  .card{background:#fff;border-radius:16px;padding:24px;box-shadow:var(--card-shadow);transition:var(--transition);display:flex;flex-direction:column;}
+  .card:hover{transform:translateY(-5px);box-shadow:0 8px 24px rgba(0,0,0,0.12);}
+  .card-header{display:flex;align-items:center;margin-bottom:20px;color:var(--primary);}
+  .card-icon{font-size:24px;margin-right:12px;background:var(--light);width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .card-title{font-size:1.5rem;font-weight:600;}
+  .card-description{color:var(--gray);margin-bottom:20px;flex-grow:1;}
+  .form-group{margin-bottom:16px;}
+  input{width:100%;padding:14px 16px;border:1px solid var(--light-gray);border-radius:8px;font-size:16px;transition:var(--transition);}
+  input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(67,97,238,.2);}
+  button{background:linear-gradient(to right,var(--primary),var(--secondary));color:#fff;border:none;padding:14px 24px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;width:100%;}
+  button i{margin-right:8px;}
+  button:hover{opacity:.9;transform:translateY(-2px);}
+  .output-section{background:#fff;border-radius:16px;padding:24px;box-shadow:var(--card-shadow);margin-top:20px;display:none;}
+  .output-section.visible{display:block;animation:fadeIn .5s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .output-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--light-gray);}
+  .output-title{font-size:1.5rem;font-weight:600;color:var(--primary);}
+  .output-content{padding:20px;background:var(--light);border-radius:8px;margin-bottom:20px;white-space:pre-wrap;line-height:1.8;}
+  .export-btn{background:linear-gradient(to right,var(--success),#2a9d8f);width:auto;padding:10px 20px;}
+  footer{text-align:center;padding:2rem 0;color:var(--gray);margin-top:3rem;border-top:1px solid var(--light-gray);}
+  @media(max-width:768px){.dashboard{grid-template-columns:1fr;}h1{font-size:2rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>Township AI Business Companion</h1>
+    <p class="tagline">Your all-in-one solution for business planning, marketing, and management</p>
+  </div>
+</header>
+
+<div class="container">
+  <div class="dashboard">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-file-alt"></i></div>
+        <h2 class="card-title">Generate Business Plan</h2>
+      </div>
+      <p class="card-description">Create a comprehensive business plan tailored to your idea and location.</p>
+      <form action="/generate" method="POST">
+        <div class="form-group"><input type="text" name="idea" placeholder="Business idea" required></div>
+        <div class="form-group"><input type="text" name="location" placeholder="Your township" required></div>
+        <button type="submit"><i class="fas fa-rocket"></i> Generate Plan</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-bullhorn"></i></div>
+        <h2 class="card-title">Marketing Content</h2>
+      </div>
+      <p class="card-description">Create compelling marketing messages for your product or service.</p>
+      <form action="/marketing" method="POST">
+        <div class="form-group"><input type="text" name="product" placeholder="Product or Service" required></div>
+        <button type="submit"><i class="fas fa-magic"></i> Generate Marketing Message</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-comment-dots"></i></div>
+        <h2 class="card-title">Customer Message</h2>
+      </div>
+      <p class="card-description">Craft professional messages for your customers.</p>
+      <form action="/message" method="POST">
+        <div class="form-group"><input type="text" name="context" placeholder="Message context" required></div>
+        <button type="submit"><i class="fas fa-envelope"></i> Generate Message</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+        <h2 class="card-title">Create Invoice</h2>
+      </div>
+      <p class="card-description">Generate professional invoices quickly.</p>
+      <form action="/invoice" method="POST">
+        <div class="form-group"><input type="text" name="details" placeholder="Item, quantity, price, recipient" required></div>
+        <button type="submit"><i class="fas fa-receipt"></i> Generate Invoice</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-clipboard-list"></i></div>
+        <h2 class="card-title">Business Registration Help</h2>
+      </div>
+      <p class="card-description">Get guidance on registering your business.</p>
+      <form action="/register-help" method="POST">
+        <div class="form-group"><input type="text" name="country" placeholder="Country" required></div>
+        <button type="submit"><i class="fas fa-hands-helping"></i> Get Guidance</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="output-section" id="outputBox">
+    <div class="output-header">
+      <h2 class="output-title">AI Response:</h2>
+    </div>
+    <div class="output-content" id="responseContent"></div>
+    <form action="/export" method="POST">
+      <input type="hidden" name="content" id="exportContent">
+      <button type="submit" class="export-btn"><i class="fas fa-download"></i> Export as PDF</button>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>© 2023 Township AI Business Companion. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=> {
+  const forms=document.querySelectorAll('form'), outputBox=document.getElementById('outputBox'), responseContent=document.getElementById('responseContent'), exportContent=document.getElementById('exportContent');
+  forms.forEach(form=>{
+    form.addEventListener('submit',e=>{
+      e.preventDefault();
+      const action=form.getAttribute('action'); let responseText='';
+      switch(action){
+        case'/generate':{
+          const idea=form.idea.value, loc=form.location.value;
+          responseText=`Business Plan for ${idea} in ${loc}\n\n1. Executive Summary: Overview.\n2. Market Analysis: Local demand promising.\n3. Marketing: Social media & community outreach.\n4. Financial: Investment $5,000-$10,000.`;
+        } break;
+        case'/marketing':{
+          const product=form.product.value;
+          responseText=`Marketing Message for ${product}\n\n"Discover ${product}! Intro offer available. Visit today!"\nHashtags: #${product.replace(/\s+/g,'')} #LocalBusiness #QualityService`;
+        } break;
+        case'/message':{
+          const context=form.context.value;
+          responseText=`Customer Message for ${context}\n\nDear customer, thank you for your interest. Contact us for support or questions.`;
+        } break;
+        case'/invoice':{
+          const details=form.details.value;
+          responseText=`Invoice: ${details}\n\nINVOICE\n=======================\nItem: Sample\nQty:2\nPrice:$50\nTotal:$100\n=======================\nThank you!`;
+        } break;
+        case'/register-help':{
+          const country=form.country.value;
+          responseText=`Registration Guidance for ${country}\n1. Check licenses.\n2. Register business name.\n3. Obtain tax ID.\n4. Check permits.`;
+        }
+      }
+      responseContent.textContent=responseText;
+      exportContent.value=responseText;
+      outputBox.classList.add('visible');
+      outputBox.scrollIntoView({behavior:'smooth'});
+    });
+  });
+});
+</script>
+</body>
+</html>
